@@ -43,6 +43,7 @@ function PureMultimodalInput({
   append,
   handleSubmit,
   className,
+  showSuggestedActions = true,
 }: {
   chatId: string;
   input: string;
@@ -64,6 +65,7 @@ function PureMultimodalInput({
     chatRequestOptions?: ChatRequestOptions,
   ) => void;
   className?: string;
+  showSuggestedActions?: boolean;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
@@ -189,7 +191,8 @@ function PureMultimodalInput({
     <div className="relative w-full flex flex-col gap-4">
       {messages.length === 0 &&
         attachments.length === 0 &&
-        uploadQueue.length === 0 && (
+        uploadQueue.length === 0 &&
+        showSuggestedActions && (
           <SuggestedActions append={append} chatId={chatId} />
         )}
 
@@ -224,7 +227,7 @@ function PureMultimodalInput({
 
       <Textarea
         ref={textareaRef}
-        placeholder="Send a message..."
+        placeholder="发送消息..."
         value={input}
         onChange={handleInput}
         className={cx(

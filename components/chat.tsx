@@ -93,6 +93,7 @@ export function Chat({
               messages={messages}
               setMessages={setMessages}
               append={append}
+              showSuggestedActions={false}
             />
           )}
         </form>
