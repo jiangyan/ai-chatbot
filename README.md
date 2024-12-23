@@ -59,3 +59,4 @@ pnpm dev
 ```
 
 Your app template should now be running on [localhost:3000](http://localhost:3000/).
+This is a demo for the AI Demo of SGMW.
