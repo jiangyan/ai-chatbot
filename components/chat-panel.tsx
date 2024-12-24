@@ -11,24 +11,35 @@ interface ChatPanelProps {
 export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
   const [userMessageId, setUserMessageId] = useState<string>('')
 
+  const convertToSupportedFormat = async (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          // Remove the data URL prefix if present
+          const base64Data = reader.result.replace(/^data:image\/\w+;base64,/, '');
+          resolve(base64Data);
+        } else {
+          reject(new Error('Failed to convert image'));
+        }
+      };
+      reader.onerror = () => reject(new Error('Failed to read image'));
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     try {
-      // Convert to base64 first
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          if (typeof reader.result === 'string' && reader.result.startsWith('data:image/')) {
-            resolve(reader.result);
-          } else {
-            reject(new Error('Invalid image format'));
-          }
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        throw new Error('Please upload an image file');
+      }
+
+      // Convert to supported format
+      const base64Data = await convertToSupportedFormat(file);
 
       // Create message content in the correct format
       const content = [
@@ -39,7 +50,7 @@ export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
         {
           type: 'image_url',
           image_url: {
-            url: base64
+            url: `data:${file.type};base64,${base64Data}`
           }
         }
       ];
@@ -48,7 +59,7 @@ export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
       const response = await fetch('/api/doubao', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           messages: [
@@ -69,9 +80,10 @@ export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
       }
 
       setInput('');
-      setUserMessageId(Date.now().toString()); // Use timestamp as a temporary ID
+      setUserMessageId(Date.now().toString());
     } catch (error) {
       console.error('Error uploading image:', error);
+      alert('Failed to upload image. Please try a different image or format.');
     }
   };
 
@@ -79,7 +91,7 @@ export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
     <div className="flex items-center justify-between w-full gap-2 p-4">
       <input
         type="file"
-        accept="image/*"
+        accept="image/jpeg,image/png"
         onChange={handleUpload}
         className="hidden"
         id="image-upload"

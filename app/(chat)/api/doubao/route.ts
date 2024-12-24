@@ -2,6 +2,17 @@ import { OpenAI } from 'openai';
 
 export const maxDuration = 60;
 
+interface Message {
+  role: string;
+  content: string | Array<{
+    type: string;
+    text?: string;
+    image_url?: {
+      url: string;
+    };
+  }>;
+}
+
 export async function POST(request: Request): Promise<Response> {
   try {
     const { messages } = await request.json();
@@ -27,9 +38,32 @@ export async function POST(request: Request): Promise<Response> {
             baseURL: baseURL.trim(),
           });
 
+          // Process messages to ensure image URLs are properly formatted
+          const processedMessages = messages.map((msg: Message) => {
+            if (msg.content && Array.isArray(msg.content)) {
+              return {
+                ...msg,
+                content: msg.content.map((item) => {
+                  if (item.type === 'image_url' && item.image_url?.url) {
+                    // Ensure the URL is properly formatted for base64 images
+                    const url = item.image_url.url;
+                    if (url.startsWith('data:image/')) {
+                      return {
+                        type: 'image_url',
+                        image_url: { url }
+                      };
+                    }
+                  }
+                  return item;
+                })
+              };
+            }
+            return msg;
+          });
+
           const response = await openai.chat.completions.create({
             model: 'ep-20241223220835-p7wpl',
-            messages: messages,
+            messages: processedMessages,
             stream: true,
           });
 
