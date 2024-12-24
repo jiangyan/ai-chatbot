@@ -1,6 +1,6 @@
 'use client';
 
-import { useChat } from 'ai/react';
+import { useChat, Message } from 'ai/react';
 import { useEffect, useRef } from 'react';
 import { useUserMessageId } from '@/hooks/use-user-message-id';
 
@@ -31,19 +31,20 @@ export function DataStreamHandler({ id }: { id: string }) {
         continue;
       }
 
-      if (streamData.content) {
+      if (streamData.content !== undefined) {
         if (!currentAssistantMessageId.current) {
           currentAssistantMessageId.current = Date.now().toString();
           setMessages(prev => {
             if (prev.some(msg => msg.id === currentAssistantMessageId.current)) {
               return prev;
             }
-            return [...prev, {
+            const newMessage: Message = {
               id: currentAssistantMessageId.current!,
               role: 'assistant',
               content: streamData.content,
               createdAt: new Date()
-            }];
+            };
+            return [...prev, newMessage];
           });
         } else {
           setMessages(prev => {
@@ -51,10 +52,11 @@ export function DataStreamHandler({ id }: { id: string }) {
             const index = newMessages.findIndex(msg => msg.id === currentAssistantMessageId.current);
             if (index === -1) return prev;
 
-            newMessages[index] = {
+            const updatedMessage: Message = {
               ...newMessages[index],
               content: streamData.content || ''
             };
+            newMessages[index] = updatedMessage;
             return newMessages;
           });
         }
