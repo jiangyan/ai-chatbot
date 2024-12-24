@@ -21,25 +21,23 @@ export async function POST(request: Request): Promise<Response> {
           });
 
           // Pass messages directly without transformation
-          const completion = await openai.chat.completions.create({
-            messages,
-            model: 'ep-20241223220835-p7wpl',
+          const response = await openai.chat.completions.create({
+            model: 'gpt-3.5-turbo',
+            messages: messages,
             stream: true,
           });
 
-          for await (const chunk of completion) {
+          for await (const chunk of response) {
             const content = chunk.choices[0]?.delta?.content || '';
-            if (content) {
-              const data = `data: ${JSON.stringify({ content })}\n\n`;
-              controller.enqueue(new TextEncoder().encode(data));
-            }
+            const data = `data: ${JSON.stringify({ content })}\n\n`;
+            controller.enqueue(new TextEncoder().encode(data));
           }
 
-          controller.enqueue(new TextEncoder().encode('data: [DONE]\n\n'));
           controller.close();
-        } catch (error) {
+        } catch (error: any) {
           console.error('Error:', error);
-          const errorData = `data: ${JSON.stringify({ error: error.message })}\n\n`;
+          const errorMessage = error?.message || 'An unknown error occurred';
+          const errorData = `data: ${JSON.stringify({ error: errorMessage })}\n\n`;
           controller.enqueue(new TextEncoder().encode(errorData));
           controller.close();
         }
