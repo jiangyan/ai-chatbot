@@ -33,6 +33,7 @@ export function DataStreamHandler({ id }: { id: string }) {
 
       if (streamData.content !== undefined) {
         if (!currentAssistantMessageId.current) {
+          const content = streamData.content || '';
           currentAssistantMessageId.current = Date.now().toString();
           setMessages(prev => {
             if (prev.some(msg => msg.id === currentAssistantMessageId.current)) {
@@ -41,7 +42,7 @@ export function DataStreamHandler({ id }: { id: string }) {
             const newMessage: Message = {
               id: currentAssistantMessageId.current!,
               role: 'assistant',
-              content: streamData.content,
+              content,
               createdAt: new Date()
             };
             return [...prev, newMessage];
