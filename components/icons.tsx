@@ -17,22 +17,25 @@ export const BotIcon = () => {
   );
 };
 
-export const UserIcon = ({ size = 16 }: { size?: number }) => (
-  <svg
-    height={size}
-    strokeLinejoin="round"
-    viewBox="0 0 16 16"
-    width={size}
-    style={{ color: 'currentcolor' }}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M8 2C6.89543 2 6 2.89543 6 4C6 5.10457 6.89543 6 8 6C9.10457 6 10 5.10457 10 4C10 2.89543 9.10457 2 8 2ZM4.5 4C4.5 2.067 6.067 0.5 8 0.5C9.933 0.5 11.5 2.067 11.5 4C11.5 5.933 9.933 7.5 8 7.5C6.067 7.5 4.5 5.933 4.5 4ZM4.00684 9.5C2.90227 9.5 2 10.4023 2 11.5068V13.5H14V11.5068C14 10.4023 13.0977 9.5 11.9932 9.5H4.00684ZM0.5 11.5068C0.5 9.57441 2.07441 8 4.00684 8H11.9932C13.9256 8 15.5 9.57441 15.5 11.5068V14.25C15.5 14.6642 15.1642 15 14.75 15H1.25C0.835786 15 0.5 14.6642 0.5 14.25V11.5068Z"
-      fill="currentColor"
-    />
-  </svg>
-);
+export const UserIcon = () => {
+  return (
+    <svg
+      data-testid="geist-icon"
+      height="16"
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width="16"
+      style={{ color: 'currentcolor' }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M7.75 0C5.95507 0 4.5 1.45507 4.5 3.25V3.75C4.5 5.54493 5.95507 7 7.75 7H8.25C10.0449 7 11.5 5.54493 11.5 3.75V3.25C11.5 1.45507 10.0449 0 8.25 0H7.75ZM6 3.25C6 2.2835 6.7835 1.5 7.75 1.5H8.25C9.2165 1.5 10 2.2835 10 3.25V3.75C10 4.7165 9.2165 5.5 8.25 5.5H7.75C6.7835 5.5 6 4.7165 6 3.75V3.25ZM2.5 14.5V13.1709C3.31958 11.5377 4.99308 10.5 6.82945 10.5H9.17055C11.0069 10.5 12.6804 11.5377 13.5 13.1709V14.5H2.5ZM6.82945 9C4.35483 9 2.10604 10.4388 1.06903 12.6857L1 12.8353V13V15.25V16H1.75H14.25H15V15.25V13V12.8353L14.931 12.6857C13.894 10.4388 11.6452 9 9.17055 9H6.82945Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
 
 export const AttachmentIcon = () => {
   return (
@@ -903,7 +906,7 @@ export const LockIcon = ({ size = 16 }: { size?: number }) => {
         clipRule="evenodd"
         d="M10 4.5V6H6V4.5C6 3.39543 6.89543 2.5 8 2.5C9.10457 2.5 10 3.39543 10 4.5ZM4.5 6V4.5C4.5 2.567 6.067 1 8 1C9.933 1 11.5 2.567 11.5 4.5V6H12.5H14V7.5V12.5C14 13.8807 12.8807 15 11.5 15H4.5C3.11929 15 2 13.8807 2 12.5V7.5V6H3.5H4.5ZM11.5 7.5H10H6H4.5H3.5V12.5C3.5 13.0523 3.94772 13.5 4.5 13.5H11.5C12.0523 13.5 12.5 13.0523 12.5 12.5V7.5H11.5Z"
         fill="currentColor"
-      />
+      ></path>
     </svg>
   );
 };
@@ -1081,22 +1084,24 @@ export const LogsIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
-export const ImageIcon = ({ size = 16 }: { size?: number }) => (
-  <svg
-    height={size}
-    strokeLinejoin="round"
-    viewBox="0 0 16 16"
-    width={size}
-    style={{ color: 'currentcolor' }}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M1.5 2.5H14.5V12.5C14.5 13.0523 14.0523 13.5 13.5 13.5H2.5C1.94772 13.5 1.5 13.0523 1.5 12.5V2.5ZM0 1H1.5H14.5H16V2.5V12.5C16 13.8807 14.8807 15 13.5 15H2.5C1.11929 15 0 13.8807 0 12.5V2.5V1ZM5 7.5C5.82843 7.5 6.5 6.82843 6.5 6C6.5 5.17157 5.82843 4.5 5 4.5C4.17157 4.5 3.5 5.17157 3.5 6C3.5 6.82843 4.17157 7.5 5 7.5ZM11.5 8.5L9.5 6.5L4.5 11.5H12.5L11.5 8.5Z"
-      fill="currentColor"
-    />
-  </svg>
-);
+export const ImageIcon = ({ size = 16 }: { size?: number }) => {
+  return (
+    <svg
+      height={size}
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width={size}
+      style={{ color: 'currentcolor' }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M14.5 2.5H1.5V9.18933L2.96966 7.71967L3.18933 7.5H3.49999H6.63001H6.93933L6.96966 7.46967L10.4697 3.96967L11.5303 3.96967L14.5 6.93934V2.5ZM8.00066 8.55999L9.53034 10.0897L10.0607 10.62L9.00001 11.6807L8.46968 11.1503L6.31935 9H3.81065L1.53032 11.2803L1.5 11.3106V12.5C1.5 13.0523 1.94772 13.5 2.5 13.5H13.5C14.0523 13.5 14.5 13.0523 14.5 12.5V9.06066L11 5.56066L8.03032 8.53033L8.00066 8.55999ZM4.05312e-06 10.8107V12.5C4.05312e-06 13.8807 1.11929 15 2.5 15H13.5C14.8807 15 16 13.8807 16 12.5V9.56066L16.5607 9L16.0303 8.46967L16 8.43934V2.5V1H14.5H1.5H4.05312e-06V2.5V10.6893L-0.0606689 10.75L4.05312e-06 10.8107Z"
+        fill="currentColor"
+      ></path>
+    </svg>
+  );
+};
 
 export const FullscreenIcon = ({ size = 16 }: { size?: number }) => (
   <svg

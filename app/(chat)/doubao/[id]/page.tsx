@@ -6,16 +6,19 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Sparkles, User, Image as ImageIcon } from 'lucide-react';
+import { SparklesIcon, UserIcon, ImageIcon } from '@/components/icons';
 
-interface PageProps {
+interface IconProps extends React.SVGProps<SVGSVGElement> {
+  size?: number;
+}
+
+interface DoubaoPageProps {
   params: {
     id: string;
   };
-  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-export default function DoubaoChat({ params, searchParams }: PageProps) {
+export default function DoubaoChat({ params }: DoubaoPageProps) {
   const [messages, setMessages] = useState<Array<{
     role: 'user' | 'assistant';
     content: any;
@@ -209,9 +212,9 @@ export default function DoubaoChat({ params, searchParams }: PageProps) {
             >
               <div className="flex-shrink-0">
                 {message.role === 'assistant' ? (
-                  <Sparkles className="h-6 w-6" />
+                  <SparklesIcon />
                 ) : (
-                  <User className="h-6 w-6" />
+                  <UserIcon />
                 )}
               </div>
               <div className="flex-1 space-y-4">
@@ -268,18 +271,17 @@ export default function DoubaoChat({ params, searchParams }: PageProps) {
               <div className="flex flex-col gap-2">
                 <Button
                   onClick={() => fileInputRef.current?.click()}
-                  variant="outline"
-                  size="icon"
-                  disabled={isStreaming}
+                  variant="ghost"
+                  className="p-0 h-auto"
+                  type="button"
                 >
-                  <ImageIcon className="h-5 w-5" />
+                  <ImageIcon />
                 </Button>
                 <Button
                   onClick={handleSubmit}
                   disabled={(!input.trim() && !image) || isStreaming}
-                  size="icon"
                 >
-                  <Sparkles className="h-5 w-5" />
+                  <SparklesIcon size={20} />
                 </Button>
               </div>
             </div>
