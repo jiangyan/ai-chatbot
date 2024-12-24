@@ -95,30 +95,37 @@ export function convertToUIMessages(
       });
     }
 
-    let textContent = '';
+    let content: string | Array<any> = '';
     const toolInvocations: Array<ToolInvocation> = [];
 
     if (typeof message.content === 'string') {
-      textContent = message.content;
+      content = message.content;
     } else if (Array.isArray(message.content)) {
-      for (const content of message.content) {
-        if (content.type === 'text') {
-          textContent += content.text;
-        } else if (content.type === 'tool-call') {
-          toolInvocations.push({
-            state: 'call',
-            toolCallId: content.toolCallId,
-            toolName: content.toolName,
-            args: content.args,
-          });
-        }
+      // If any content item is an image, keep the array structure
+      if (message.content.some(item => item.type === 'image_url' || item.type === 'image')) {
+        content = message.content;
+      } else {
+        // Otherwise concatenate text and handle tool calls
+        content = message.content.reduce((acc, item) => {
+          if (item.type === 'text') {
+            return acc + item.text;
+          } else if (item.type === 'tool-call') {
+            toolInvocations.push({
+              state: 'call',
+              toolCallId: item.toolCallId,
+              toolName: item.toolName,
+              args: item.args,
+            });
+          }
+          return acc;
+        }, '');
       }
     }
 
     chatMessages.push({
       id: message.id,
       role: message.role as Message['role'],
-      content: textContent,
+      content,
       toolInvocations,
     });
 
