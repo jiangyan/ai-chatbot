@@ -6,9 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { SparklesIcon, UserIcon, ImageIcon } from '@/components/icons';
+import { Sparkles, User, Image as ImageIcon } from 'lucide-react';
 
-export default function DoubaoChat({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: {
+    id: string;
+  };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+export default function DoubaoChat({ params, searchParams }: PageProps) {
   const [messages, setMessages] = useState<Array<{
     role: 'user' | 'assistant';
     content: any;
@@ -202,9 +209,9 @@ export default function DoubaoChat({ params }: { params: { id: string } }) {
             >
               <div className="flex-shrink-0">
                 {message.role === 'assistant' ? (
-                  <SparklesIcon className="h-6 w-6" />
+                  <Sparkles className="h-6 w-6" />
                 ) : (
-                  <UserIcon className="h-6 w-6" />
+                  <User className="h-6 w-6" />
                 )}
               </div>
               <div className="flex-1 space-y-4">
@@ -272,7 +279,7 @@ export default function DoubaoChat({ params }: { params: { id: string } }) {
                   disabled={(!input.trim() && !image) || isStreaming}
                   size="icon"
                 >
-                  <SparklesIcon className="h-5 w-5" />
+                  <Sparkles className="h-5 w-5" />
                 </Button>
               </div>
             </div>
