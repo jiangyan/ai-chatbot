@@ -12,12 +12,11 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
   size?: number;
 }
 
-type PageProps = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+type DoubaoParams = {
+  id: string;
 };
 
-export default function DoubaoChat({ params, searchParams }: PageProps) {
+export default function DoubaoChat({ params }: { params: DoubaoParams }) {
   const [messages, setMessages] = useState<Array<{
     role: 'user' | 'assistant';
     content: any;
