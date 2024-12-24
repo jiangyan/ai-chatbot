@@ -75,7 +75,8 @@ export const Icons = {
   redo: Redo,
   terminalWindow: TerminalSquare,
   crossSmall: Cross,
-  fullscreen: Maximize2
+  fullscreen: Maximize2,
+  python: Code
 };
 
 export const SparklesIcon = Icons.bot;
@@ -115,3 +116,4 @@ export const CrossSmallIcon = Icons.crossSmall;
 export const LogsIcon = Icons.terminal;
 export const SummarizeIcon = Icons.messageCircle;
 export const FullscreenIcon = Icons.fullscreen;
+export const PythonIcon = Icons.python;
