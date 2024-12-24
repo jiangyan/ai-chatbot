@@ -8,15 +8,13 @@ import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { SparklesIcon, UserIcon, ImageIcon } from '@/components/icons';
 
-interface IconProps extends React.SVGProps<SVGSVGElement> {
-  size?: number;
+interface DoubaoProps {
+  params: {
+    id: string;
+  };
 }
 
-type DoubaoParams = {
-  id: string;
-};
-
-export function DoubaoClient({ params }: { params: DoubaoParams }) {
+export function DoubaoClient({ params }: DoubaoProps) {
   const [messages, setMessages] = useState<Array<{
     role: 'user' | 'assistant';
     content: any;

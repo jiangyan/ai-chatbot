@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    ppr: 'incremental',
+  },
   images: {
     remotePatterns: [
       {
@@ -7,9 +10,6 @@ const nextConfig = {
         hostname: 'avatar.vercel.sh',
       },
     ],
-  },
-  experimental: {
-    ppr: true,
   },
 }
 
