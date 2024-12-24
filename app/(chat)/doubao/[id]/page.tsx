@@ -4,13 +4,12 @@ import { DoubaoClient } from './client';
 export const experimental_ppr = true;
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 // Dynamic chat component that will be loaded after initial HTML
-async function ChatContent({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params;
-  return <DoubaoClient params={resolvedParams} />;
+async function ChatContent({ params }: { params: { id: string } }) {
+  return <DoubaoClient params={params} />;
 }
 
 export default function Page({ params }: PageProps) {

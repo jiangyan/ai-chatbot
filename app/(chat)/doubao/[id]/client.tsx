@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { SparklesIcon, UserIcon, ImageIcon } from '@/components/icons';
+import { SparklesIcon, UserIcon, UploadImageIcon } from '@/components/icons';
 
 interface DoubaoProps {
   params: {
@@ -14,11 +14,21 @@ interface DoubaoProps {
   };
 }
 
+interface MessageContent {
+  type: 'text' | 'image_url';
+  text?: string;
+  image_url?: {
+    url: string;
+  };
+}
+
+interface Message {
+  role: 'user' | 'assistant';
+  content: string | MessageContent[];
+}
+
 export function DoubaoClient({ params }: DoubaoProps) {
-  const [messages, setMessages] = useState<Array<{
-    role: 'user' | 'assistant';
-    content: any;
-  }>>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [image, setImage] = useState<string | null>(null);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -217,19 +227,24 @@ export function DoubaoClient({ params }: DoubaoProps) {
               </div>
               <div className="flex-1 space-y-4">
                 {Array.isArray(message.content) ? (
-                  message.content.map((content, i) => (
-                    content.type === 'text' ? (
-                      <p key={i} className="text-sm">{content.text}</p>
-                    ) : content.type === 'image_url' ? (
-                      <div key={i} className="w-48 cursor-pointer" onClick={() => setPreviewImage(content.image_url.url)}>
-                        <img
-                          src={content.image_url.url}
-                          alt="Uploaded"
-                          className="rounded-lg w-full h-auto hover:opacity-90 transition-opacity"
-                        />
-                      </div>
-                    ) : null
-                  ))
+                  message.content.map((content, i) => {
+                    if (content.type === 'text' && content.text) {
+                      return <p key={i} className="text-sm">{content.text}</p>;
+                    }
+                    if (content.type === 'image_url' && content.image_url?.url) {
+                      const imageUrl = content.image_url.url;
+                      return (
+                        <div key={i} className="w-48 cursor-pointer" onClick={() => setPreviewImage(imageUrl)}>
+                          <img
+                            src={imageUrl}
+                            alt="Uploaded"
+                            className="rounded-lg w-full h-auto hover:opacity-90 transition-opacity"
+                          />
+                        </div>
+                      );
+                    }
+                    return null;
+                  })
                 ) : (
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                 )}
@@ -273,7 +288,7 @@ export function DoubaoClient({ params }: DoubaoProps) {
                   className="p-0 h-auto"
                   type="button"
                 >
-                  <ImageIcon />
+                  <UploadImageIcon />
                 </Button>
                 <Button
                   onClick={handleSubmit}
