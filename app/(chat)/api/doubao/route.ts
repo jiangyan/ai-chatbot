@@ -20,7 +20,6 @@ export async function POST(request: Request): Promise<Response> {
             baseURL: 'https://ark.cn-beijing.volces.com/api/v3',
           });
 
-          // Pass messages directly without transformation
           const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
             messages: messages,
@@ -45,9 +44,10 @@ export async function POST(request: Request): Promise<Response> {
     });
 
     return new Response(stream, { headers });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    const errorMessage = error?.message || 'An unknown error occurred';
+    return new Response(JSON.stringify({ error: errorMessage }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
