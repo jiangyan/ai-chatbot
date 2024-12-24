@@ -14,7 +14,14 @@ function ChatContent({ params }: DoubaoProps) {
   return <DoubaoClient params={params} />;
 }
 
-export default function Page({ params }: DoubaoProps) {
+interface PageProps {
+  params: Promise<{ id: string }>;
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+export default async function Page({ params }: PageProps) {
+  const resolvedParams = await params;
+  
   return (
     <div className="min-h-screen">
       <Suspense fallback={
@@ -22,7 +29,7 @@ export default function Page({ params }: DoubaoProps) {
           <div className="animate-pulse text-lg">Loading chat...</div>
         </div>
       }>
-        <ChatContent params={params} />
+        <ChatContent params={resolvedParams} />
       </Suspense>
     </div>
   );
