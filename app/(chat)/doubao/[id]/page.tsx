@@ -3,16 +3,18 @@ import { DoubaoClient } from './client';
 
 export const experimental_ppr = true;
 
-interface PageProps {
-  params: { id: string };
+interface DoubaoProps {
+  params: {
+    id: string;
+  };
 }
 
 // Dynamic chat component that will be loaded after initial HTML
-async function ChatContent({ params }: { params: { id: string } }) {
+function ChatContent({ params }: DoubaoProps) {
   return <DoubaoClient params={params} />;
 }
 
-export default function Page({ params }: PageProps) {
+export default function Page({ params }: DoubaoProps) {
   return (
     <div className="min-h-screen">
       <Suspense fallback={
