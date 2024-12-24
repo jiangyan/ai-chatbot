@@ -26,6 +26,12 @@ type ImageContent = {
 
 type MessageContent = TextContent | ImageContent;
 
+type ContentItem = {
+  type: 'text' | 'image';
+  text?: string;
+  image?: string;
+};
+
 // Function to convert URL to base64
 export async function convertImageUrlToBase64(url: string): Promise<string> {
   try {
@@ -184,7 +190,7 @@ export const createStreamingChatCompletion = async (messages: any[], options: an
     const transformedMessages = messages.map(msg => {
       // If content is an array (multimodal message)
       if (Array.isArray(msg.content)) {
-        const transformedContent = msg.content.map(item => {
+        const transformedContent = msg.content.map((item: ContentItem) => {
           if (item.type === 'text') {
             return {
               type: 'text',
