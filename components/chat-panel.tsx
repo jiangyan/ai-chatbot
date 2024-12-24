@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button } from '@/components/ui/button'
 
 interface ChatPanelProps {
   id?: string
@@ -72,4 +73,27 @@ export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
     } catch (error) {
       console.error('Error uploading image:', error);
     }
-  }; 
+  };
+
+  return (
+    <div className="flex items-center justify-between w-full gap-2 p-4">
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleUpload}
+        className="hidden"
+        id="image-upload"
+      />
+      <label htmlFor="image-upload">
+        <Button
+          type="button"
+          variant="outline"
+          className="cursor-pointer"
+          disabled={isLoading}
+        >
+          Upload Image
+        </Button>
+      </label>
+    </div>
+  );
+} 
