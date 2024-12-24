@@ -16,9 +16,9 @@ export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === 'string') {
-          // Ensure we have a proper data URL format
+          // Get pure base64 without data URL prefix
           const base64Data = reader.result.split(',')[1];
-          resolve(`data:${file.type};base64,${base64Data}`);
+          resolve(base64Data);
         } else {
           reject(new Error('Failed to convert image'));
         }
@@ -54,7 +54,7 @@ export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
         {
           type: 'image_url',
           image_url: {
-            url: base64Data
+            url: `base64://${base64Data}`
           }
         }
       ];
