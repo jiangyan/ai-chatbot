@@ -45,14 +45,10 @@ export async function POST(request: Request): Promise<Response> {
                 ...msg,
                 content: msg.content.map((item) => {
                   if (item.type === 'image_url' && item.image_url?.url) {
-                    // Ensure the URL is properly formatted for base64 images
-                    const url = item.image_url.url;
-                    if (url.startsWith('data:image/')) {
-                      return {
-                        type: 'image_url',
-                        image_url: { url }
-                      };
-                    }
+                    return {
+                      type: 'image_url',
+                      image_url: { url: item.image_url.url }
+                    };
                   }
                   return item;
                 })
