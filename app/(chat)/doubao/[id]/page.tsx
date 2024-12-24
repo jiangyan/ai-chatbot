@@ -16,7 +16,11 @@ async function ChatContent({ params }: { params: Promise<{ id: string }> }) {
 export default function Page({ params }: PageProps) {
   return (
     <div className="min-h-screen">
-      <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <Suspense fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-pulse text-lg">Loading chat...</div>
+        </div>
+      }>
         <ChatContent params={params} />
       </Suspense>
     </div>

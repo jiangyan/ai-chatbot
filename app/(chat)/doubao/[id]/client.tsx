@@ -60,31 +60,33 @@ export function DoubaoClient({ params }: DoubaoProps) {
   const handleSubmit = async () => {
     if ((!input.trim() && !image) || isStreaming) return;
 
-    const newMessage = {
-      role: 'user' as const,
-      content: image ? [] : input.trim()
-    };
-
+    let messageContent: any = input.trim();
     if (image) {
+      messageContent = [];
       if (input.trim()) {
-        (newMessage.content as any[]).push({
+        messageContent.push({
           type: 'text',
           text: input.trim()
         });
       } else {
-        (newMessage.content as any[]).push({
+        messageContent.push({
           type: 'text',
           text: 'What can you tell me about this image?'
         });
       }
 
-      (newMessage.content as any[]).push({
+      messageContent.push({
         type: 'image_url',
         image_url: {
           url: image
         }
       });
     }
+
+    const newMessage = {
+      role: 'user' as const,
+      content: messageContent
+    };
 
     try {
       setIsStreaming(true);
