@@ -3,12 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "clear-db": "tsx scripts/clear-db.ts",
+    "clear-blob": "tsx scripts/clear-blob.ts",
     "dev": "next dev",
     "build": "tsx lib/db/migrate && next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "npx tsx lib/db/migrate.ts",
+    "db:studio": "drizzle-kit studio",
+    "db:push": "drizzle-kit push",
+    "db:pull": "drizzle-kit pull",
+    "db:check": "drizzle-kit check",
+    "db:up": "drizzle-kit up",
+    "clear-all": "pnpm clear-db && pnpm clear-blob"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.6",
