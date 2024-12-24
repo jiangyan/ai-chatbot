@@ -21,7 +21,6 @@
     "clear-all": "pnpm clear-db && pnpm clear-blob"
   },
   "dependencies": {
-    "@ai-sdk/openai": "1.0.6",
     "@auth/drizzle-adapter": "^0.3.6",
     "@hookform/resolvers": "^3.3.2",
     "@radix-ui/react-dialog": "^1.0.5",
