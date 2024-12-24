@@ -4,10 +4,10 @@ import { useChat } from 'ai/react';
 import { useEffect, useRef } from 'react';
 import { useUserMessageId } from '@/hooks/use-user-message-id';
 
-type DataStreamDelta = {
-  type: 'user-message-id' | 'assistant-message-id' | 'text' | 'done';
-  content: string;
-} | null;
+interface StreamData {
+  content?: string;
+  error?: string;
+}
 
 export function DataStreamHandler({ id }: { id: string }) {
   const { messages, setMessages, data: dataStream } = useChat({ id });
@@ -22,44 +22,42 @@ export function DataStreamHandler({ id }: { id: string }) {
     lastProcessedIndex.current = dataStream.length - 1;
 
     for (const delta of newDeltas) {
-      if (!delta) continue;
+      if (!delta || typeof delta !== 'object') continue;
 
-      if (delta.type === 'user-message-id') {
-        setUserMessageIdFromServer(delta.content);
+      const streamData = delta as StreamData;
+
+      if (streamData.error) {
+        console.error('Stream error:', streamData.error);
         continue;
       }
 
-      if (delta.type === 'assistant-message-id') {
-        currentAssistantMessageId.current = delta.content;
-        setMessages(prev => {
-          if (prev.some(msg => msg.id === delta.content)) {
-            return prev;
-          }
-          return [...prev, {
-            id: delta.content,
-            role: 'assistant',
-            content: '',
-            createdAt: new Date()
-          }];
-        });
-      }
+      if (streamData.content) {
+        if (!currentAssistantMessageId.current) {
+          currentAssistantMessageId.current = Date.now().toString();
+          setMessages(prev => {
+            if (prev.some(msg => msg.id === currentAssistantMessageId.current)) {
+              return prev;
+            }
+            return [...prev, {
+              id: currentAssistantMessageId.current!,
+              role: 'assistant',
+              content: streamData.content,
+              createdAt: new Date()
+            }];
+          });
+        } else {
+          setMessages(prev => {
+            const newMessages = [...prev];
+            const index = newMessages.findIndex(msg => msg.id === currentAssistantMessageId.current);
+            if (index === -1) return prev;
 
-      if (delta.type === 'text' && currentAssistantMessageId.current) {
-        setMessages(prev => {
-          const newMessages = [...prev];
-          const index = newMessages.findIndex(msg => msg.id === currentAssistantMessageId.current);
-          if (index === -1) return prev;
-
-          newMessages[index] = {
-            ...newMessages[index],
-            content: delta.content
-          };
-          return newMessages;
-        });
-      }
-
-      if (delta.type === 'done') {
-        currentAssistantMessageId.current = null;
+            newMessages[index] = {
+              ...newMessages[index],
+              content: streamData.content || ''
+            };
+            return newMessages;
+          });
+        }
       }
     }
   }, [dataStream, setMessages, setUserMessageIdFromServer]);
