@@ -8,7 +8,10 @@ import { getChatById, getMessagesByChatId } from '@/lib/db/queries';
 import { convertToUIMessages } from '@/lib/utils';
 import { DataStreamHandler } from '@/components/data-stream-handler';
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
+export default async function Page(props: { 
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const params = await props.params;
   const { id } = params;
   const chat = await getChatById({ id });

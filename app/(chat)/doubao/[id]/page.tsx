@@ -16,11 +16,12 @@ function ChatContent({ params }: DoubaoProps) {
 
 interface PageProps {
   params: Promise<{ id: string }>;
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params, searchParams }: PageProps) {
   const resolvedParams = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
   
   return (
     <div className="min-h-screen">

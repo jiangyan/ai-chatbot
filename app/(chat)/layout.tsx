@@ -8,11 +8,17 @@ import Script from 'next/script';
 
 export const experimental_ppr = true;
 
+interface LayoutProps {
+  children: React.ReactNode;
+  params?: Promise<{ [key: string]: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
 export default async function Layout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  params,
+  searchParams,
+}: LayoutProps) {
   const [session, cookieStore] = await Promise.all([auth(), cookies()]);
   const isCollapsed = cookieStore.get('sidebar:state')?.value !== 'true';
 

@@ -5,8 +5,13 @@ import { DEFAULT_MODEL_NAME, models } from '@/lib/ai/models';
 import { generateUUID } from '@/lib/utils';
 import { DataStreamHandler } from '@/components/data-stream-handler';
 
-export default async function Page() {
+interface PageProps {
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function Page({ searchParams }: PageProps) {
   const id = generateUUID();
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
 
   const cookieStore = await cookies();
   const modelIdFromCookie = cookieStore.get('model-id')?.value;
