@@ -105,7 +105,33 @@ const PurePreviewMessage = ({
                       message.role === 'user',
                   })}
                 >
-                  <Markdown>{message.content as string}</Markdown>
+                  {Array.isArray(message.content) ? (
+                    message.content.map((item, index) => {
+                      if (item.type === 'text') {
+                        return (
+                          <Markdown key={index} className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0">
+                            {item.text}
+                          </Markdown>
+                        );
+                      }
+                      if ((item.type === 'image' || item.type === 'image_url') && (item.image || item.image_url?.url)) {
+                        return (
+                          <div key={index} className="mt-2">
+                            <img 
+                              src={item.image || item.image_url?.url} 
+                              alt="Uploaded content"
+                              className="max-w-lg rounded-lg"
+                            />
+                          </div>
+                        );
+                      }
+                      return null;
+                    })
+                  ) : (
+                    <Markdown className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0">
+                      {message.content}
+                    </Markdown>
+                  )}
                 </div>
               </div>
             )}

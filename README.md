@@ -24,6 +24,10 @@
   - Unified API for generating text, structured objects, and tool calls with LLMs
   - Hooks for building dynamic chat and generative user interfaces
   - Supports OpenAI (default), Anthropic, Cohere, and other model providers
+- [Doubao Vision Model](https://doubao.com)
+  - Advanced multimodal capabilities for image and text understanding
+  - Seamless image upload and analysis
+  - Interactive image preview and discussion
 - [shadcn/ui](https://ui.shadcn.com)
   - Styling with [Tailwind CSS](https://tailwindcss.com)
   - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
@@ -35,7 +39,21 @@
 
 ## Model Providers
 
-This template ships with OpenAI `gpt-4o` as the default. However, with the [AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://sdk.vercel.ai/providers/ai-sdk-providers) with just a few lines of code.
+This template includes two powerful AI models:
+
+1. OpenAI Models:
+   - `gpt-4o` for complex, multi-step tasks
+   - `gpt-4o-mini` for fast, lightweight tasks
+
+2. Doubao Vision Model:
+   - Advanced multimodal capabilities
+   - Image understanding and analysis
+   - Natural language interaction with visual content
+   - Seamless image upload and preview functionality
+
+You can easily switch between these models in the interface, with each optimized for different use cases:
+- Use GPT models for text-based conversations and complex reasoning
+- Use Doubao Vision for tasks involving image analysis and visual understanding
 
 ## Deploy Your Own
 

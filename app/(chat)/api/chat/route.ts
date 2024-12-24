@@ -71,6 +71,12 @@ export async function POST(request: Request) {
     return new Response('Model not found', { status: 404 });
   }
 
+  // If model has a custom route, redirect to it
+  if (model.id === 'doubao') {
+    const url = new URL('/doubao/new', request.url);
+    return Response.redirect(url);
+  }
+
   const coreMessages = convertToCoreMessages(messages);
   const userMessage = getMostRecentUserMessage(coreMessages);
 

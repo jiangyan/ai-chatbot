@@ -5,9 +5,17 @@ export interface Model {
   label: string;
   apiIdentifier: string;
   description: string;
+  route?: string;
 }
 
 export const models: Array<Model> = [
+  {
+    id: 'doubao',
+    label: 'Doubao',
+    apiIdentifier: 'ep-20241223220835-p7wpl',
+    description: 'Multimodal model for text and image tasks',
+    route: '/doubao/new'
+  },
   {
     id: 'gpt-4o-mini',
     label: 'GPT 4o mini',
@@ -22,4 +30,4 @@ export const models: Array<Model> = [
   },
 ] as const;
 
-export const DEFAULT_MODEL_NAME: string = 'gpt-4o-mini';
+export const DEFAULT_MODEL_NAME: string = 'doubao';

@@ -144,48 +144,67 @@ function PureMultimodalInput({
         body: formData,
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        const { url, pathname, contentType } = data;
-
-        return {
-          url,
-          name: pathname,
-          contentType: contentType,
-        };
+      if (!response.ok) {
+        const { error } = await response.json().catch(() => ({ error: 'Upload failed' }));
+        toast.error(error || 'Failed to upload file');
+        return undefined;
       }
-      const { error } = await response.json();
-      toast.error(error);
+
+      const data = await response.json();
+      return {
+        url: data.url,
+        name: data.pathname,
+        contentType: data.contentType,
+      };
     } catch (error) {
-      toast.error('Failed to upload file, please try again!');
+      console.error('Upload error:', error);
+      return undefined;
     }
   };
 
   const handleFileChange = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(event.target.files || []);
+      if (files.length === 0) return;
 
-      setUploadQueue(files.map((file) => file.name));
+      // Clear the file input immediately to allow new uploads
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
 
-      try {
-        const uploadPromises = files.map((file) => uploadFile(file));
-        const uploadedAttachments = await Promise.all(uploadPromises);
-        const successfullyUploadedAttachments = uploadedAttachments.filter(
-          (attachment) => attachment !== undefined,
-        );
+      // Add files to upload queue
+      const newFiles = files.map(file => ({
+        name: file.name,
+        file
+      }));
+      setUploadQueue(newFiles.map(f => f.name));
 
-        setAttachments((currentAttachments) => [
-          ...currentAttachments,
-          ...successfullyUploadedAttachments,
-        ]);
-      } catch (error) {
-        console.error('Error uploading files!', error);
-      } finally {
-        setUploadQueue([]);
+      // Process files one by one to avoid overwhelming the browser
+      for (const { file, name } of newFiles) {
+        try {
+          const attachment = await uploadFile(file);
+          if (attachment) {
+            setAttachments(curr => [...curr, attachment]);
+            // Remove from upload queue when successful
+            setUploadQueue(curr => curr.filter(f => f !== name));
+          } else {
+            toast.error(`Failed to upload ${name}`);
+            // Remove from upload queue when failed
+            setUploadQueue(curr => curr.filter(f => f !== name));
+          }
+        } catch (error) {
+          console.error(`Error uploading ${name}:`, error);
+          toast.error(`Failed to upload ${name}`);
+          // Remove from upload queue when failed
+          setUploadQueue(curr => curr.filter(f => f !== name));
+        }
       }
     },
     [setAttachments],
   );
+
+  // Disable the send button while files are uploading
+  const isUploading = uploadQueue.length > 0;
 
   return (
     <div className="relative w-full flex flex-col gap-4">
@@ -250,7 +269,10 @@ function PureMultimodalInput({
       />
 
       <div className="absolute bottom-0 p-2 w-fit flex flex-row justify-start">
-        <AttachmentsButton fileInputRef={fileInputRef} isLoading={isLoading} />
+        <AttachmentsButton 
+          fileInputRef={fileInputRef} 
+          isLoading={isLoading || isUploading} 
+        />
       </div>
 
       <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">
@@ -261,6 +283,7 @@ function PureMultimodalInput({
             input={input}
             submitForm={submitForm}
             uploadQueue={uploadQueue}
+            isUploading={isUploading}
           />
         )}
       </div>
@@ -330,10 +353,12 @@ function PureSendButton({
   submitForm,
   input,
   uploadQueue,
+  isUploading,
 }: {
   submitForm: () => void;
   input: string;
   uploadQueue: Array<string>;
+  isUploading: boolean;
 }) {
   return (
     <Button
@@ -342,7 +367,7 @@ function PureSendButton({
         event.preventDefault();
         submitForm();
       }}
-      disabled={input.length === 0 || uploadQueue.length > 0}
+      disabled={input.length === 0 || isUploading}
     >
       <ArrowUpIcon size={14} />
     </Button>

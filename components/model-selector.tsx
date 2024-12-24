@@ -1,6 +1,7 @@
 'use client';
 
 import { startTransition, useMemo, useOptimistic, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { saveModelId } from '@/app/(chat)/actions';
 import { Button } from '@/components/ui/button';
@@ -22,8 +23,8 @@ export function ModelSelector({
   selectedModelId: string;
 } & React.ComponentProps<typeof Button>) {
   const [open, setOpen] = useState(false);
-  const [optimisticModelId, setOptimisticModelId] =
-    useOptimistic(selectedModelId);
+  const [optimisticModelId, setOptimisticModelId] = useOptimistic(selectedModelId);
+  const router = useRouter();
 
   const selectedModel = useMemo(
     () => models.find((model) => model.id === optimisticModelId),
@@ -50,6 +51,11 @@ export function ModelSelector({
             key={model.id}
             onSelect={() => {
               setOpen(false);
+
+              if (model.route) {
+                router.push(model.route);
+                return;
+              }
 
               startTransition(() => {
                 setOptimisticModelId(model.id);

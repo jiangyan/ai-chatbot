@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "clear-db": "tsx scripts/clear-db.ts",
+    "clear-blob": "tsx scripts/clear-blob.ts",
     "dev": "next dev --turbo",
     "build": "tsx lib/db/migrate && next build",
     "start": "next start",
@@ -15,7 +17,8 @@
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit pull",
     "db:check": "drizzle-kit check",
-    "db:up": "drizzle-kit up"
+    "db:up": "drizzle-kit up",
+    "clear-all": "pnpm clear-db && pnpm clear-blob"
   },
   "dependencies": {
     "@ai-sdk/openai": "1.0.6",
@@ -55,6 +58,7 @@
     "next": "15.0.3-canary.2",
     "next-auth": "5.0.0-beta.25",
     "next-themes": "^0.3.0",
+    "openai": "^4.24.1",
     "orderedmap": "^2.1.1",
     "postgres": "^3.4.4",
     "prosemirror-example-setup": "^1.2.3",
