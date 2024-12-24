@@ -33,10 +33,19 @@ export async function POST(request: Request): Promise<Response> {
             stream: true,
           });
 
+          let isFirstChunk = true;
           for await (const chunk of response) {
             const content = chunk.choices[0]?.delta?.content || '';
-            const data = `data: ${JSON.stringify({ content })}\n\n`;
-            controller.enqueue(new TextEncoder().encode(data));
+            if (content) {
+              // Skip the first chunk if it looks like a GUID
+              if (isFirstChunk && /^[a-f0-9-]+$/i.test(content.trim())) {
+                isFirstChunk = false;
+                continue;
+              }
+              const data = `data: ${JSON.stringify({ content })}\n\n`;
+              controller.enqueue(new TextEncoder().encode(data));
+              isFirstChunk = false;
+            }
           }
 
           controller.close();

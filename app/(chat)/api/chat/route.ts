@@ -101,11 +101,6 @@ export async function POST(request: Request) {
 
   return createDataStreamResponse({
     execute: (dataStream) => {
-      dataStream.writeData({
-        type: 'user-message-id',
-        content: userMessageId,
-      });
-
       const result = streamText({
         model: customModel(model.apiIdentifier),
         system: systemPrompt,
@@ -425,12 +420,6 @@ export async function POST(request: Request) {
                 messages: responseMessagesWithoutIncompleteToolCalls.map(
                   (message) => {
                     const messageId = generateUUID();
-
-                    if (message.role === 'assistant') {
-                      dataStream.writeMessageAnnotation({
-                        messageIdFromServer: messageId,
-                      });
-                    }
 
                     return {
                       id: messageId,

@@ -143,6 +143,7 @@ export function DoubaoClient({ params }: DoubaoProps) {
       const decoder = new TextDecoder();
       let buffer = '';
       let currentText = '';
+      let isFirstChunk = true;
 
       while (true) {
         const { value, done } = await reader.read();
@@ -168,7 +169,12 @@ export function DoubaoClient({ params }: DoubaoProps) {
             }
 
             if (content) {
+              if (isFirstChunk && /^[a-f0-9-]+$/i.test(content.trim())) {
+                isFirstChunk = false;
+                continue;
+              }
               currentText += content;
+              isFirstChunk = false;
               setMessages(prev => {
                 const newMessages = [...prev];
                 const lastMessage = newMessages[newMessages.length - 1];
@@ -246,7 +252,9 @@ export function DoubaoClient({ params }: DoubaoProps) {
                     return null;
                   })
                 ) : (
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  <p className="text-sm whitespace-pre-wrap">
+                    {typeof message.content === 'string' ? message.content.replace(/^[a-f0-9-]+\n/, '') : message.content}
+                  </p>
                 )}
               </div>
             </div>
