@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import { Metadata } from 'next/types';
 import { Toaster } from 'sonner';
 
 import { ThemeProvider } from '@/components/theme-provider';
@@ -15,17 +15,11 @@ export const viewport = {
   maximumScale: 1, // Disable auto-zoom on mobile Safari
 };
 
-interface RootLayoutProps {
-  children: React.ReactNode;
-  params?: Promise<{ [key: string]: string }>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
 export default async function RootLayout({
   children,
-  params,
-  searchParams,
-}: RootLayoutProps) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="antialiased">
