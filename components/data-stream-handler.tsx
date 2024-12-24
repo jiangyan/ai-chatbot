@@ -7,7 +7,7 @@ import { useUserMessageId } from '@/hooks/use-user-message-id';
 type DataStreamDelta = {
   type: 'user-message-id' | 'assistant-message-id' | 'text' | 'done';
   content: string;
-};
+} | null;
 
 export function DataStreamHandler({ id }: { id: string }) {
   const { messages, setMessages, data: dataStream } = useChat({ id });
@@ -22,6 +22,8 @@ export function DataStreamHandler({ id }: { id: string }) {
     lastProcessedIndex.current = dataStream.length - 1;
 
     for (const delta of newDeltas) {
+      if (!delta) continue;
+
       if (delta.type === 'user-message-id') {
         setUserMessageIdFromServer(delta.content);
         continue;
