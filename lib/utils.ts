@@ -125,7 +125,7 @@ export function convertToUIMessages(
     chatMessages.push({
       id: message.id,
       role: message.role as Message['role'],
-      content,
+      content: content as Message['content'],
       toolInvocations,
     });
 
