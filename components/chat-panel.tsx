@@ -16,7 +16,9 @@ export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === 'string') {
-          resolve(reader.result);
+          // Ensure we have a proper data URL format
+          const base64Data = reader.result.split(',')[1];
+          resolve(`data:${file.type};base64,${base64Data}`);
         } else {
           reject(new Error('Failed to convert image'));
         }
@@ -31,9 +33,13 @@ export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
     if (!file) return;
 
     try {
-      // Validate file type
+      // Validate file type and size
       if (!file.type.startsWith('image/')) {
         throw new Error('Please upload an image file');
+      }
+      
+      if (file.size > 20 * 1024 * 1024) { // 20MB limit
+        throw new Error('Image size should be less than 20MB');
       }
 
       // Convert to supported format
@@ -74,7 +80,8 @@ export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const error = await response.json();
+        throw new Error(error.error || `HTTP error! status: ${response.status}`);
       }
 
       setInput('');
