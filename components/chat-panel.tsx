@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { append } from '@/app/actions'
 
 interface ChatPanelProps {
   id?: string
@@ -44,15 +43,32 @@ export function ChatPanel({ id, isLoading, input, setInput }: ChatPanelProps) {
         }
       ];
 
-      // Send the message
-      const messageId = await append({
-        id,
-        content,
-        role: 'user'
+      // Send the message to the API
+      const response = await fetch('/api/doubao', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a helpful assistant that can understand images and text.'
+            },
+            {
+              role: 'user',
+              content
+            }
+          ]
+        })
       });
 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       setInput('');
-      setUserMessageId(messageId);
+      setUserMessageId(Date.now().toString()); // Use timestamp as a temporary ID
     } catch (error) {
       console.error('Error uploading image:', error);
     }
